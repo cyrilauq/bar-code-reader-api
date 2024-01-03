@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios')
+const cors = require('cors');
 
 const app = express();
 const port = 3300;
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/product/:barCode", async (req, res, next) => {
@@ -15,7 +17,7 @@ app.get("/product/:barCode", async (req, res, next) => {
         if (data.items.length === 0) {
             res.status(404).json({ error: "No product found" });
         }
-        res.status(500).json(data.items[0]);
+        res.status(200).json(data.items[0]);
     } catch (error) {
         res.status(500).json({ error: error });
     }
