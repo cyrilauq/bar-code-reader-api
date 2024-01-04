@@ -3,11 +3,15 @@ const bodyParser = require('body-parser');
 const axios = require('axios')
 const cors = require('cors');
 
+const routes = require("./routes/router");
+
 const app = express();
 const port = 3300;
 
 app.use(cors());
 app.use(bodyParser.json());
+
+app.use(routes);
 
 app.get("/product/:barCode", async (req, res, next) => {
     try {
