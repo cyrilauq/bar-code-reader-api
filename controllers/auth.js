@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+require("dotenv").config()
+
 const users = [];
 
 exports.postLogin = async (req, res, next) => {
@@ -26,9 +28,9 @@ exports.postLogin = async (req, res, next) => {
         }
     */
     try {
-        console.log(req.body.email);
+        console.log(req.body.login);
         console.log(JSON.stringify(users));
-        const user = users.find(user => user.email === req.body.email);
+        const user = users.find(user => user.email === req.body.login);
         if (!user) {
             const err = new Error('User Not Found!')
             err.status = 400;
@@ -37,7 +39,7 @@ exports.postLogin = async (req, res, next) => {
             const tokenPayload = {
                 email: user.email,
             };
-            const accessToken = jwt.sign(tokenPayload, 'SECRET');
+            const accessToken = jwt.sign(tokenPayload, process.env.JWT_SECRET);
             res.status(200).json({
                 status: 'success',
                 message: 'User Logged In!',
@@ -82,7 +84,7 @@ exports.postRegister = async (req, res, next) => {
     */
     console.log("Register consulted");
     try {
-        if (users.some(user => user.email === req.body.email)) {
+        if (users.some(user => user.email === req.body.login)) {
             const err = new Error('Email Taken!')
             err.status = 400;
             throw err;
@@ -95,7 +97,7 @@ exports.postRegister = async (req, res, next) => {
 
         users.push(user);
 
-        res.status(201).json({
+        res.status(200).json({
             status: 'success',
             message: 'User Registered!',
             data: {
@@ -111,4 +113,8 @@ exports.postRegister = async (req, res, next) => {
             message: err.message,
         });
     }
+};
+
+exports.postRefreshToken = (req, res, next) => {
+
 };

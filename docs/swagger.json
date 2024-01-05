@@ -14,7 +14,14 @@
   "schemes": [
     "http"
   ],
-  "securityDefinitions": {},
+  "securityDefinitions": {
+    "Authorization": {
+      "type": "apiKey",
+      "name": "authorization",
+      "in": "header",
+      "description": "Authentication token"
+    }
+  },
   "consumes": [
     "application/json"
   ],
@@ -98,9 +105,6 @@
           "200": {
             "description": "The user successfully registered"
           },
-          "201": {
-            "description": "Created"
-          },
           "400": {
             "description": "Data incorrectly formatted"
           },
@@ -109,6 +113,16 @@
           },
           "500": {
             "description": "Server Issue"
+          }
+        }
+      }
+    },
+    "/refresh-token": {
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
           }
         }
       }
@@ -153,6 +167,12 @@
             "example": "Password123@"
           }
         }
+      }
+    },
+    "securitySchems": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

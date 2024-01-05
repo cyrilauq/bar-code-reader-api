@@ -48,11 +48,24 @@ const doc = {
     consumes: ['application/json'],  // by default: ['application/json']
     produces: ['application/json'],  // by default: ['application/json']
     tags: [],
-    securityDefinitions: {},  // by default: empty object
+    securityDefinitions: {
+        "Authorization": {
+            "type": "apiKey",
+            "name": "authorization",
+            "in": "header",
+            "description": "Authentication token"
+        }
+    },  // by default: empty object
     components: {
         schemas: {
             User: generateSchema(new User("John", "Doe", "johndoe077", "johndoe077@api.com", "Password123@")),
             Login: generateSchema({ login: "johndoe077", password: "Password123@" })
+        },
+        securitySchems: {
+            bearerAuth: {
+                type: 'http',
+                scheme: 'bearer'
+            }
         }
     },
 };
@@ -60,11 +73,4 @@ const doc = {
 const outputFile = './docs/swagger.json';
 const endpointsFiles = ['./server.js', './routes/*.js', '.controllers/*.js'];
 
-/* NOTE: if you use the express Router, you must pass in the 
-   'endpointsFiles' only the root file where the route starts,
-   such as: index.js, app.js, routes.js, ... */
 exports.swagger = () => swaggerAutogen(outputFile, endpointsFiles, doc);
-
-// swaggerAutogen(outputFile, endpointsFiles, doc).then(() => {
-//     require('./index.js'); // Your project's root file
-//   });
