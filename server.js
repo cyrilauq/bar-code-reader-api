@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const axios = require('axios')
 const cors = require('cors');
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./docs/swagger.json');
+
 const routes = require("./routes/router");
 
 const app = express();
@@ -12,6 +15,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use(routes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/product/:barCode", async (req, res, next) => {
     try {
@@ -27,6 +32,8 @@ app.get("/product/:barCode", async (req, res, next) => {
     }
 })
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+require('./docs/swagger').swagger().then(() => {
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
 });

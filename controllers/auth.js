@@ -4,6 +4,24 @@ const jwt = require('jsonwebtoken');
 const users = [];
 
 exports.postLogin = async (req, res, next) => {
+    /* 
+        #swagger.tags = ['Auth']
+        #swagger.description = 'Login the user.'
+        #swagger.consumes = ['application/json']
+        #swagger.produces = ['application/json']
+        #swagger.responses[200] = {
+            description: 'The user successfully logged in',
+        }
+        #swagger.responses[500] = {
+            description: 'Server Issue',
+        }
+        #swagger.responses[404] = {
+            description: 'User not found',
+        }
+        #swagger.responses[400] = {
+            description: 'Data incorrectly formatted',
+        }
+    */
     try {
         console.log(req.body.email);
         console.log(JSON.stringify(users));
@@ -17,7 +35,7 @@ exports.postLogin = async (req, res, next) => {
                 email: user.email,
             };
             const accessToken = jwt.sign(tokenPayload, 'SECRET');
-            res.status(201).json({
+            res.status(200).json({
                 status: 'success',
                 message: 'User Logged In!',
                 data: {
@@ -38,6 +56,24 @@ exports.postLogin = async (req, res, next) => {
 };
 
 exports.postRegister = async (req, res, next) => {
+    /* 
+        #swagger.tags = ['Auth']
+        #swagger.description = 'Register the user.'
+        #swagger.consumes = ['application/json']
+        #swagger.produces = ['application/json']
+        #swagger.responses[200] = {
+            description: 'The user successfully registered',
+        }
+        #swagger.responses[500] = {
+            description: 'Server Issue',
+        }
+        #swagger.responses[409] = {
+            description: 'User already exists',
+        }
+        #swagger.responses[400] = {
+            description: 'Data incorrectly formatted',
+        }
+    */
     console.log("Register consulted");
     try {
         if (users.some(user => user.email === req.body.email)) {
