@@ -22,12 +22,47 @@
     "application/json"
   ],
   "paths": {
+    "/product/{barCode}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "barCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/login": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "description": "Login the user.",
+        "description": "Log the user.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/components/schemas/Login"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The user successfully logged in"
@@ -50,6 +85,15 @@
           "Auth"
         ],
         "description": "Register the user.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The user successfully registered"
@@ -65,6 +109,48 @@
           },
           "500": {
             "description": "Server Issue"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "firstname": {
+            "type": "string",
+            "example": "John"
+          },
+          "name": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "username": {
+            "type": "string",
+            "example": "johndoe077"
+          },
+          "email": {
+            "type": "string",
+            "example": "johndoe077@api.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "Password123@"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "example": "johndoe077"
+          },
+          "password": {
+            "type": "string",
+            "example": "Password123@"
           }
         }
       }

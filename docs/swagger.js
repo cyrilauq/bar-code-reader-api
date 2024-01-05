@@ -1,3 +1,25 @@
+const User = require('../module/user').User;
+
+const generateSchema = obj => {
+    const schema = {
+        type: 'object',
+        properties: {},
+    };
+
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            const propertyValue = obj[key];
+            // You might want to add more logic to determine the type of each property
+            schema.properties[key] = {
+                type: typeof propertyValue,
+                example: propertyValue,
+            };
+        }
+    }
+
+    return schema;
+};
+
 /* Swagger configuration */
 const options = {
     openapi: 'OpenAPI 3',   // Enable/Disable OpenAPI. By default is null
@@ -27,11 +49,16 @@ const doc = {
     produces: ['application/json'],  // by default: ['application/json']
     tags: [],
     securityDefinitions: {},  // by default: empty object
-    definitions: {},
+    components: {
+        schemas: {
+            User: generateSchema(new User("John", "Doe", "johndoe077", "johndoe077@api.com", "Password123@")),
+            Login: generateSchema({ login: "johndoe077", password: "Password123@" })
+        }
+    },
 };
 
 const outputFile = './docs/swagger.json';
-const endpointsFiles = ['./routes/*.js'];
+const endpointsFiles = ['./server.js', './routes/*.js', '.controllers/*.js'];
 
 /* NOTE: if you use the express Router, you must pass in the 
    'endpointsFiles' only the root file where the route starts,

@@ -6,9 +6,12 @@ const users = [];
 exports.postLogin = async (req, res, next) => {
     /* 
         #swagger.tags = ['Auth']
-        #swagger.description = 'Login the user.'
-        #swagger.consumes = ['application/json']
+        #swagger.description = 'Log the user.'
         #swagger.produces = ['application/json']
+        #swagger.parameters['body'] = {
+            in: 'body',
+            schema: { $ref: '#/components/schemas/Login' }
+        }
         #swagger.responses[200] = {
             description: 'The user successfully logged in',
         }
@@ -59,8 +62,11 @@ exports.postRegister = async (req, res, next) => {
     /* 
         #swagger.tags = ['Auth']
         #swagger.description = 'Register the user.'
-        #swagger.consumes = ['application/json']
         #swagger.produces = ['application/json']
+        #swagger.parameters['body'] = {
+            in: 'body',
+            schema: { $ref: '#/components/schemas/User' }
+        }
         #swagger.responses[200] = {
             description: 'The user successfully registered',
         }
