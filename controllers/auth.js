@@ -28,12 +28,10 @@ exports.postLogin = async (req, res, next) => {
         }
     */
     try {
-        console.log(req.body.login);
-        console.log(JSON.stringify(users));
         const user = users.find(user => user.email === req.body.login);
         if (!user) {
             const err = new Error('User Not Found!')
-            err.status = 400;
+            err.status = 404;
             throw err;
         } else if (await bcrypt.compare(req.body.password, user.password)) {
             const tokenPayload = {
@@ -82,7 +80,6 @@ exports.postRegister = async (req, res, next) => {
             description: 'Data incorrectly formatted',
         }
     */
-    console.log("Register consulted");
     try {
         if (users.some(user => user.email === req.body.login)) {
             const err = new Error('Email Taken!')
@@ -107,7 +104,6 @@ exports.postRegister = async (req, res, next) => {
             },
         });
     } catch (err) {
-        console.log(err);
         res.status(err.status).json({
             status: 'fail',
             message: err.message,
