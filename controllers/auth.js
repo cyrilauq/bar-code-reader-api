@@ -31,7 +31,7 @@ exports.postLogin = async (req, res, next) => {
         const user = await User.findOne({
             $or: [
                 { username: req.body.login },
-                { email: req.body.login }
+                { email: req.body.email }
             ]
         });
 
@@ -94,8 +94,8 @@ exports.postRegister = async (req, res, next) => {
         }
     */
     try {
-        if (User.find({
-            email: req.body.login
+        if (await User.findOne({
+            email: req.body.email
         })) {
             const err = new Error('Email Taken!')
             err.status = 400;
