@@ -1,9 +1,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-require("dotenv").config()
+const User = require("../models/userModel");
 
-const users = [];
+require("dotenv").config()
 
 exports.postLogin = async (req, res, next) => {
     /* 
@@ -28,7 +28,13 @@ exports.postLogin = async (req, res, next) => {
         }
     */
     try {
-        const user = users.find(user => user.email === req.body.login);
+        const user = await User.findOne({
+            $or: [
+                { username: req.body.login },
+                { email: req.body.login }
+            ]
+        });
+
         if (!user) {
             const err = new Error('User Not Found!')
             err.status = 404;
@@ -42,6 +48,12 @@ exports.postLogin = async (req, res, next) => {
                 status: 'success',
                 message: 'User Logged In!',
                 data: {
+                    user: {
+                        name: user.name,
+                        firstname: user.firstname,
+                        email: user.email,
+                        username: user.username
+                    },
                     accessToken,
                 },
             });
@@ -51,6 +63,7 @@ exports.postLogin = async (req, res, next) => {
             throw err;
         }
     } catch (err) {
+        console.log(err);
         res.status(err.status).json({
             status: 'fail',
             message: err.message,
@@ -81,7 +94,9 @@ exports.postRegister = async (req, res, next) => {
         }
     */
     try {
-        if (users.some(user => user.email === req.body.login)) {
+        if (User.find({
+            email: req.body.login
+        })) {
             const err = new Error('Email Taken!')
             err.status = 400;
             throw err;
@@ -89,18 +104,21 @@ exports.postRegister = async (req, res, next) => {
 
         const user = {
             email: req.body.email,
+            firstname: req.body.firstname,
+            username: req.body.username,
+            name: req.body.name,
             password: await bcrypt.hash(req.body.password, 12),
         }
 
-        users.push(user);
+        console.log('Insert user');
+        const result = await User.create(user);
+        console.log('User inserted');
 
         res.status(200).json({
             status: 'success',
             message: 'User Registered!',
             data: {
-                user: {
-                    email: user.email,
-                },
+                result,
             },
         });
     } catch (err) {

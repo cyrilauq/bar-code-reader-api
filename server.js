@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios')
 const cors = require('cors');
+const mongoose = require("mongoose");
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./docs/swagger.json');
@@ -32,8 +33,17 @@ app.get("/product/:barCode", async (req, res, next) => {
     }
 })
 
-require('./docs/swagger').swagger().then(() => {
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
+mongoose
+    .connect(
+        `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PWD}${process.env.MONGO_URI}`
+    )
+    .then(() => {
+        require('./docs/swagger').swagger().then(() => {
+            app.listen(process.env.PORT, () => {
+                console.log(`Server is running on port ${port}`);
+            });
+        });
+    })
+    .catch((error) => {
+        console.log(error);
     });
-});
