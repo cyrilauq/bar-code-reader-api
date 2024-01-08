@@ -2,8 +2,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require("../models/userModel");
+const { HttpStatusCode } = require('axios');
+const { refreshToken, generateRefreshToken } = require('../utils/auth');
 
-require("dotenv").config()
+require("dotenv").config();
 
 exports.postLogin = async (req, res, next) => {
     /* 
@@ -43,7 +45,8 @@ exports.postLogin = async (req, res, next) => {
             const tokenPayload = {
                 email: user.email,
             };
-            const accessToken = jwt.sign(tokenPayload, process.env.JWT_SECRET);
+            const accessToken = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: process.env.ACCESS_TOKEN_LIFETIME });
+            const refreshToken = await generateRefreshToken(user);
             res.status(200).json({
                 status: 'success',
                 message: 'User Logged In!',
@@ -54,7 +57,10 @@ exports.postLogin = async (req, res, next) => {
                         email: user.email,
                         username: user.username
                     },
-                    accessToken,
+                    tokens: {
+                        accessToken,
+                        refreshToken,
+                    }
                 },
             });
         } else {
@@ -98,7 +104,7 @@ exports.postRegister = async (req, res, next) => {
             email: req.body.email
         })) {
             const err = new Error('Email Taken!')
-            err.status = 400;
+            err.status = HttpStatusCode.Conflict;
             throw err;
         }
 
@@ -122,6 +128,9 @@ exports.postRegister = async (req, res, next) => {
             },
         });
     } catch (err) {
+        if (!err.status) {
+            err.status = 500;
+        }
         res.status(err.status).json({
             status: 'fail',
             message: err.message,
@@ -129,6 +138,23 @@ exports.postRegister = async (req, res, next) => {
     }
 };
 
-exports.postRefreshToken = (req, res, next) => {
-
+exports.postRefreshToken = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({
+            status: 'fail',
+            message: 'Unauthorized!',
+        });
+    }
+    console.log(authHeader);
+    const token = authHeader.split(' ')[1];
+    const refreshedToken = await refreshToken(token);
+    if (refreshedToken) {
+        return res.status(200).json({
+            tokens: refreshedToken
+        });
+    }
+    return res.status(401).json({
+        message: "Refresh token not valid, re log to access the asked resource",
+    });
 };
