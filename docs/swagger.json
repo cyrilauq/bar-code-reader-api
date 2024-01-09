@@ -129,6 +129,35 @@
           }
         }
       }
+    },
+    "authenticate/user/inventories": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/inventories": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -136,25 +165,28 @@
       "User": {
         "type": "object",
         "properties": {
-          "firstname": {
+          "id": {
             "type": "string",
             "example": "John"
           },
-          "name": {
+          "firstname": {
             "type": "string",
             "example": "Doe"
           },
-          "username": {
+          "name": {
             "type": "string",
             "example": "johndoe077"
           },
-          "email": {
+          "username": {
             "type": "string",
             "example": "johndoe077@api.com"
           },
-          "password": {
+          "email": {
             "type": "string",
             "example": "Password123@"
+          },
+          "password": {
+            "type": "undefined"
           }
         }
       },

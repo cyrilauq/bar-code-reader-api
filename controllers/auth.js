@@ -5,6 +5,10 @@ const User = require("../models/userModel");
 const { HttpStatusCode } = require('axios');
 const { refreshToken, generateRefreshToken } = require('../utils/auth');
 
+const {
+    v4: uuidv4,
+} = require('uuid');
+
 require("dotenv").config();
 
 exports.postLogin = async (req, res, next) => {
@@ -52,6 +56,7 @@ exports.postLogin = async (req, res, next) => {
                 message: 'User Logged In!',
                 data: {
                     user: {
+                        id: user._id.toString(),
                         name: user.name,
                         firstname: user.firstname,
                         email: user.email,
@@ -109,6 +114,7 @@ exports.postRegister = async (req, res, next) => {
         }
 
         const user = {
+            id: uuidv4(),
             email: req.body.email,
             firstname: req.body.firstname,
             username: req.body.username,

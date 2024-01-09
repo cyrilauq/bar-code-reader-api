@@ -6,9 +6,13 @@ const inventorySchema = mongoose.Schema(
             type: String,
             required: [true, "inventory need an id"],
         },
-        isUsed: {
-            type: Boolean,
-            required: [true, "inventory need to set isUsed property"],
+        userId: {
+            type: String,
+            required: [true, "inventory need an id"],
+        },
+        name: {
+            type: String,
+            required: [true, "inventory need an id"],
         },
     },
     {

@@ -2,10 +2,11 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization;
+    console.log(authHeader);
     if (!authHeader) {
         return res.status(401).json({
             status: 'fail',
-            message: 'Unauthorized!',
+            message: 'Unauthorized! No header given',
         });
     }
     const token = authHeader.split(' ')[1];
