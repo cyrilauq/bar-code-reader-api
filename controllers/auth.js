@@ -140,15 +140,13 @@ exports.postRegister = async (req, res, next) => {
 
 exports.postRefreshToken = async (req, res, next) => {
     const authHeader = req.headers.authorization;
-    if (!authHeader) {
+    if (!authHeader || authHeader.split(' ').lenght !== 2) {
         return res.status(401).json({
             status: 'fail',
-            message: 'Unauthorized!',
+            message: 'Authorization missing or incorrect',
         });
     }
-    console.log(authHeader);
-    const token = authHeader.split(' ')[1];
-    const refreshedToken = await refreshToken(token);
+    const refreshedToken = await refreshToken(authHeader.split(' ')[1]);
     if (refreshedToken) {
         return res.status(200).json({
             tokens: refreshedToken
