@@ -47,6 +47,7 @@ exports.postLogin = async (req, res, next) => {
             throw err;
         } else if (await bcrypt.compare(req.body.password, user.password)) {
             const tokenPayload = {
+                id: user._id.toString(),
                 email: user.email,
             };
             const accessToken = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: process.env.ACCESS_TOKEN_LIFETIME });
