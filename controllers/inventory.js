@@ -40,13 +40,14 @@ exports.addInventory = async (req, res, next) => {
         return;
     }
     try {
-        await Inventory.create({
+        const result = await Inventory.create({
             name: data.name,
             userId: req.user.id,
             description: data.description
         });
         res.status(200).json({
-            message: "Inventory added!"
+            message: "Inventory added!",
+            data: result
         });
         return;
     } catch (err) {
