@@ -12,3 +12,51 @@ exports.getInventories = async (req, res, next) => {
         });
     }
 };
+
+exports.addInventory = async (req, res, next) => {
+    const data = req.body;
+    if (!data.name || data.name.trim().length === 0) {
+        res.status(400).json({
+            message: "Inventory must have a name"
+        });
+        return;
+    }
+    if (!data.description || data.description.trim().length === 0) {
+        res.status(400).json({
+            message: "Inventory must have a description"
+        });
+        return;
+    }
+    const result = await Inventory.find({
+        $and: [
+            { name: data.name },
+            { userId: req.user.id }
+        ]
+    });
+    if (result.length > 0) {
+        res.status(400).json({
+            message: "Inventory's name must be unique."
+        });
+        return;
+    }
+    try {
+        await Inventory.create({
+            name: data.name,
+            userId: req.user.id,
+            description: data.description
+        });
+        res.status(200).json({
+            message: "Inventory added!"
+        });
+        return;
+    } catch (err) {
+        if (!err.status) {
+            err.status = 500;
+        }
+        res.status(err.status).json({
+            status: 'fail',
+            message: err.message,
+        });
+        return;
+    }
+};

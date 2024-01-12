@@ -2,17 +2,17 @@ const mongoose = require("mongoose");
 
 const inventorySchema = mongoose.Schema(
     {
-        inventoryId: {
-            type: String,
-            required: [true, "inventory need an id"],
-        },
         userId: {
             type: String,
-            required: [true, "inventory need an id"],
+            required: [true, "inventory need a userId"],
         },
         name: {
             type: String,
-            required: [true, "inventory need an id"],
+            required: [true, "inventory need a name"],
+        },
+        description: {
+            type: String,
+            required: [true, "inventory need a description"],
         },
     },
     {
