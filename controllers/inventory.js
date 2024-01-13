@@ -1,3 +1,4 @@
+const InventoryItem = require('../models/inventoryItemModel');
 const Inventory = require('../models/inventoryModel');
 
 exports.getInventories = async (req, res, next) => {
@@ -74,11 +75,20 @@ exports.getInventory = async (req, res, next) => {
             res.status(404).json({
                 message: `Inventory with id ${inventoryId} not found`
             });
+            return;
         }
+        console.log(inventoryId);
+        console.log(typeof inventoryId);
+        const items = await InventoryItem.find({ inventoryId: req.params.inventoryId });
+        console.log(items);
         res.status(200).json({
-            data: result
+            data: {
+                ...result._doc,
+                items: items.map(i => ({ id: i._id, name: i.name, description: "", qty: i.qty, barcode: i.barcode }))
+            }
         });
     } catch (err) {
+        console.log(err);
         res.status(500).json({
             message: "internal server error"
         });
