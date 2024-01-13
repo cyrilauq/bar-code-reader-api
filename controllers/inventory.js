@@ -61,3 +61,26 @@ exports.addInventory = async (req, res, next) => {
         return;
     }
 };
+
+exports.getInventory = async (req, res, next) => {
+    try {
+        const inventoryId = req.params.inventoryId
+        const result = await Inventory.findOne({
+            $and: [
+                { _id: inventoryId }, { userId: req.user.id }
+            ]
+        });
+        if (!result) {
+            res.status(404).json({
+                message: `Inventory with id ${inventoryId} not found`
+            });
+        }
+        res.status(200).json({
+            data: result
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: "internal server error"
+        });
+    }
+};
