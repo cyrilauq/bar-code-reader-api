@@ -35,7 +35,9 @@ app.get("/product/:barCode", async (req, res, next) => {
 
 mongoose
     .connect(
-        `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PWD}${process.env.MONGO_URI}`
+        `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PWD}${process.env.MONGO_URI}`, {
+        dbName: process.env.NODE_ENV === "production" ? "prod" : "dev"
+    }
     )
     .then(() => {
         require('./docs/swagger').swagger().then(() => {

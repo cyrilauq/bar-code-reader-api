@@ -61,7 +61,8 @@ exports.postLogin = async (req, res, next) => {
                         name: user.name,
                         firstname: user.firstname,
                         email: user.email,
-                        username: user.username
+                        username: user.username,
+                        roles: user.roles
                     },
                     tokens: {
                         accessToken,
