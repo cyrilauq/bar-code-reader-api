@@ -17,7 +17,7 @@ exports.getUsers = async (req, res, next) => {
         console.log(err);
         res.status(err.status || 500).json({
             status: 'fail',
-            message: err.message,
+            message: err.status ? err.message : "Internal server error",
         });
     }
 }
