@@ -1,6 +1,9 @@
 const Product = require("../models/productModel");
 
 const Joi = require('@hapi/joi');
+const upload = require('multer')();
+
+const handleFormData = upload.single('file');
 
 const productSchema = Joi.object({
     name: Joi.string().min(5).max(50).required(),

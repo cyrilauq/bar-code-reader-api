@@ -13,7 +13,8 @@ const app = express();
 const port = 3300;
 
 app.use(cors());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.json({ extended: true }));
 
 app.use(routes);
 
