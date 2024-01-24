@@ -24,6 +24,10 @@ const productSchema = mongoose.Schema(
             unique: [true, "The barcode of a product must be unique"],
             dropDups: true
         },
+        imagePath: {
+            type: String,
+            required: [true, "product need a image"]
+        },
     },
     {
         timestamps: true,
