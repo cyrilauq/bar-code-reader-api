@@ -17,6 +17,9 @@ const productSchema = Joi.object({
 });
 
 exports.postProduct = async (req, res, next) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(HttpStatusCode.BadRequest).json({ message: "A product need at leat one image." });
+    }
     const data = { ...req.body, file: req.files[0] };
     const { error } = productSchema.validate(req.body);
     const product = await Product.findOne({ barcode: data.barcode })
