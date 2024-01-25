@@ -18,8 +18,12 @@ const productSchema = Joi.object({
 
 exports.postProduct = async (req, res, next) => {
     const data = { ...req.body, file: req.files[0] };
+    const { error } = productSchema.validate(req.body);
     const product = await Product.findOne({ barcode: data.barcode })
 
+    if (error) {
+        return res.status(HttpStatusCode.BadRequest).json({ message: error.details[0].message });
+    }
     if (product) {
         return res.status(HttpStatusCode.Conflict).json({ message: "Product with the given barcode already exist" })
     }
@@ -33,6 +37,7 @@ exports.postProduct = async (req, res, next) => {
             barcode: data.barcode,
             imagePath: (process.env.NODE_ENV === "production" ? "https://bar-code-reader-api.onrender.com/" : "http://localhost:3300/") + "image/" + data.barcode + ".png"
         });
+        res.status(HttpStatusCode.Ok).json({ message: "Product sucessfully added" });
     } catch (err) {
         console.log(err);
         res.status(HttpStatusCode.InternalServerError).json({ message: "AN internal servor error occured" });
